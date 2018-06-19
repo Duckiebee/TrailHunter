@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bitter:700" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <title>Trail Hunters</title>    
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    <div id="header-background">
+        <div class="text-center" id="header">
+            <h1 class="bitterText" id="pageTitle"><b>Trail <img src="assets/images/trailhunter.png" alt="logo">Hunters</b></h1>
+            <p class="lead bitterText tagline">Find trails on the go, wherever you are!</p>
+        </div>
+    </div>
+    <div class="container">
+        
+        <nav class="navbar navbar-light bg-light">
+            <form class="form-inline">
+                <input id= "locationInput" class="form-control mr-sm-2" type="text" placeholder="City, State, Zip Code" aria-label="Search">
+                <input id= "radius" class="form-control mr-sm-2" type="text" placeholder="Radius (miles)" aria-label="Search">
+                <button class="btn btn-outline-success btn-success my-2 my-sm-0" id="trailSearch" type="button">Find my trail!</button>
+            </form>
+        </nav>
+        <div id="errorMessage" style="display: none;" class="alert text-center alert-danger">
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div id="mapWeatherDivs" class="row">            
+                    <div id="map" class="col-xs-12 col-md-12 text-center pull-left">
+                    </div>
+
+                    <div id="weatherInfo" class="col-xs-12 col-md-12 text-center pull-left bitterText">
+                        <p id="weatherName"></p>
+                        <p id="weatherTemp"></p>
+                        <p id="weatherHumidity"></p>
+                        <p id="weatherDescription"></p>
+                        <p><img id="weatherIcon" src=""/></p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default col-xs-12 col-md-6 pull-right bitterText">
+                <div class="panel-heading text-center "><b>TRAILS NEAR YOU</b></div>
+                <div class="panel-body">
+                    <div id="trails-info"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer" class="footer navbar-fixed-bottom bitterText">
+      <div class="container text-center">
+        <p id="alignFooterText">Copyright &#169; 2017 | BMSJ-Inc</p>
+      </div>
+    </div>
+
+<script>
+
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var locations = [];
+    var searchCoordinates = { lat: 41.4993, lng: -81.6944 };;
+
+    function initMap() {
+        var uluru = searchCoordinates;
+        var map = new google.maps.Map(document.getElementById('map'),
+            {
+                zoom: 9,
+                center: uluru
+            });
+            
+
+        var marker = new google.maps.Marker({
+            position: uluru,
+            map: map
+        });
+
+        var contentString = locations;
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+        
+        for (var i = 0; i < locations.length; i++) {
+                var data = locations[i];
+                var myLatLng = new google.maps.LatLng(data.lat, data.lng)
+                var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: labels[i % labels.length] });
+        
+          google.maps.event.addListener(marker, 'click', (function (marker, data) {
+                return function () {
+                    infowindow.setContent("<h4>" + data.name + "</h4>");
+                    infowindow.open(map, marker);
+                }
+            })(marker, data)); 
+        
+        }
+    }
+</script>
+
+<script src="assets/javascript/MarkerClusterer.js"></script>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1xuQdW9H5SBfN8XjZtAJKifKs30YBIqk&callback=initMap">
+    </script> 
+    <script type="text/javascript" src="assets/javascript/app.js"></script>
+</body>
+</html>
